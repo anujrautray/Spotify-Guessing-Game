@@ -8,8 +8,8 @@ from requests import post, get
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Ensure to use a strong secret key
 
-CLIENT_ID = "your_client_id"
-CLIENT_SECRET = "your_client_secret"
+CLIENT_ID = "b94137467aa14dc49698bc3cdbd6a00b"
+CLIENT_SECRET = "a69168252595420890c13158e61610a0"
 
 def init_db():
     conn = sqlite3.connect('users.db')
