@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Artist</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #1A1A1A;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .score {
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            background-color: #333333;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100vh; 
+            width: 100vw; 
+            padding-top: 20px; 
+        }
+        .album-art {
+            border-radius: 15px;
+            max-width: 400px;
+            height: auto;
+        }
+        .content-left {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        .content-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        .result-button {
+            width: 150px;
+            margin: 10px 0;
+            background-color: #007bff;
+            color: white;
+        }
+        .result-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="score">{{ score }}</div>
+    <div class="container">
+        <div class="content-left">
+            <img src="{{ game.album }}" alt="Album Cover" class="album-art">
+        </div>
+        <div class="content-right">
+            <form method="POST" action="{{ url_for('guess') }}" class="mt-4">
+                <input type="hidden" name="answer" value="{{ game.answer }}">
+                <div class="form-group">
+                    {% for choice in game.choices %}
+                        <button type="submit" name="choice" value="{{ choice }}" class="btn btn-outline-primary result-button mb-2">{{ choice }}</button>
+                    {% endfor %}
+                </div>
+            </form>
+
+            <audio id="audio-player" preload="auto" controls>
+                {% if game.preview_url %}
+                    <source src="{{ game.preview_url }}" type="audio/mpeg">
+                {% else %}
+                    <source id="spotify-track" type="audio/mpeg">
+                {% endif %}
+                Your browser does not support the audio element.
+            </audio>
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <script>
+        const audioPlayer = document.getElementById('audio-player');
+        
+        if ("{{ game.preview_url }}") {
+            audioPlayer.addEventListener('timeupdate', () => {
+                if (audioPlayer.currentTime >= 5) {
+                    audioPlayer.pause();
+                    audioPlayer.currentTime = 0;
+                    audioPlayer.play();
+                }
+            });
+
+            audioPlayer.addEventListener('seeked', () => {
+                audioPlayer.currentTime = 0;
+            });
+        }
+    </script>
+</body>
+</html>
