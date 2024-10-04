@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guess</title>
+    <title>Guess the Artist</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
@@ -91,11 +91,7 @@
             </form>
 
             <audio id="audio-player" preload="auto" controls>
-                {% if game.preview_url %}
-                    <source src="{{ game.preview_url }}" type="audio/mpeg">
-                {% else %}
-                    <source id="spotify-track" type="audio/mpeg">
-                {% endif %}
+                <source src="{{ game.preview_url }}" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
 
@@ -106,23 +102,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script>
         const audioPlayer = document.getElementById('audio-player');
-        
-        if ("{{ game.preview_url }}") {
-            audioPlayer.addEventListener('timeupdate', () => {
-                if (audioPlayer.currentTime >= 5) {
-                    audioPlayer.pause();
-                    audioPlayer.currentTime = 0;
-                    audioPlayer.play();
-                }
-            });
 
-            audioPlayer.addEventListener('seeked', () => {
+        audioPlayer.addEventListener('timeupdate', () => {
+            if (audioPlayer.currentTime >= 5) {
+                audioPlayer.pause();
                 audioPlayer.currentTime = 0;
-            });
-        }
+                audioPlayer.removeAttribute('controls');
+            }
+        });
+
+        audioPlayer.addEventListener('seeked', () => {
+            audioPlayer.currentTime = 0;
+        });
     </script>
 </body>
 </html>
