@@ -5,12 +5,10 @@ import sqlite3
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from requests import post, get
-from dotenv import load_dotenv
 
-load_dotenv()
 
-client_id = os.getenv("CLIENT_ID")
-client_secret = os.getenv("CLIENT_SECRET")
+CLIENT_ID = "b94137467aa14dc49698bc3cdbd6a00b"
+CLIENT_SECRET = "a69168252595420890c13158e61610a0"
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -34,7 +32,7 @@ def init_db():
 
 def get_token():
     global token
-    auth_string = client_id + ":" + client_secret
+    auth_string = CLIENT_ID + ":" + CLIENT_SECRET
     auth_bytes = auth_string.encode("utf-8")
     auth_base64 = str(base64.b64encode(auth_bytes), "utf-8")
 
